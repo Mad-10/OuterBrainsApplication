@@ -25,18 +25,6 @@ public class Task extends OuterBrainsObject {
         super();
     }
 
-    public Task(String name, String description, Date deadline, TaskStatus status,
-                List<User> executors, User supervisor, User creator, List<User> auditors, List<File> supportFiles) {
-        super(name, description);
-        this.deadline = deadline;
-        this.status = status;
-        this.executors = executors;
-        this.supervisor = supervisor;
-        this.creator = creator;
-        this.auditors = auditors;
-        this.supportFiles = supportFiles;
-    }
-
     public enum TaskStatus {
         NOT_STARTED,//未开始
         IN_PROGRESS,//进行中
