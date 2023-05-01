@@ -1,4 +1,4 @@
-package com.outerbrains.user.Mapper;
+package com.outerbrains.user.mapper;
 
 
 import com.outerbrains.user.entity.User;
