@@ -8,20 +8,22 @@ import lombok.EqualsAndHashCode;
 @Data
 public class Role extends OuterBrainsObject {
 
-    public enum RoleName {
+    public enum RoleType {
         ROLE_ADMIN,
-        ROLE_USER
+        ROLE_USER,
+        ROLE_LEADER,
+        ROLE_MEMBER
     }
 
-    private RoleName roleName;
+    private String roleTypeName;
 
     public Role() {
         super();
     }
 
-    public Role(String name, String description, RoleName roleName) {
+    public Role(String name, String description, String roleTypeName) {
         super(name);
         this.description = description;
-        this.roleName = roleName;
+        this.roleTypeName = roleTypeName;
     }
 }
