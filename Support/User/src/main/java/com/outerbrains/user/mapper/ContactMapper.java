@@ -1,4 +1,4 @@
-package com.outerbrains.user.Mapper;
+package com.outerbrains.user.mapper;
 
 import com.outerbrains.user.entity.Contact;
 import org.apache.ibatis.annotations.*;
