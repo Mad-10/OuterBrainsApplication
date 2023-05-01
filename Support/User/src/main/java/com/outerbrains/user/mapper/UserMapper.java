@@ -1,6 +1,7 @@
 package com.outerbrains.user.mapper;
 
 
+import com.outerbrains.file.entity.File;
 import com.outerbrains.user.entity.User;
 import org.apache.ibatis.annotations.*;
 
@@ -23,6 +24,15 @@ public interface UserMapper {
 
     @Delete("DELETE FROM users WHERE id=#{id}")
     int delete(String id);
+
+    // 添加头像
+    @Update("UPDATE users SET avatar_id=#{avatar.id} WHERE id=#{id}")
+    int updateAvatar(@Param("id") String id, @Param("avatar") File avatar);
+
+    // 下载头像
+    @Select("SELECT * FROM users LEFT JOIN files ON users.avatar_id = files.id WHERE users.id=#{id}")
+    User findByIdWithAvatar(String id);
+
 
 }
 
