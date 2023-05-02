@@ -13,14 +13,15 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(basePackages = "com.outerbrains.user.mapper")
+@MapperScan(basePackages = { "com.outerbrains.chat.mapper","com.outerbrains.file.mapper",
+        "com.outerbrains.project.mapper", "com.outerbrains.score.mapper", "com.outerbrains.task.mapper",
+        "com.outerbrains.team.mapper","com.outerbrains.user.mapper"})
 public class MyBatisConfig {
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource.user")
     public DataSource userDataSource() {
         return DataSourceBuilder.create().build();
     }
-
 
     @Bean
     public SqlSessionFactory userSqlSessionFactory(@Qualifier("userDataSource") DataSource userDataSource) throws Exception {
