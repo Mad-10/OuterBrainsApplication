@@ -12,14 +12,14 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class Task extends OuterBrainsObject {
-    private Date deadline;
-    private TaskStatus status;
-    private List<User> executors;
-    private User supervisor;
-    private User creator;
-    private List<User> auditors;
-    private List<File> supportFiles;
-    private List<File> resultFiles;
+    private Date deadline;//截止时间
+    private TaskStatus status;//任务状态
+    private List<User> executors;//执行者
+    private User supervisor;//监督者
+    private User creator;//创建者
+    private List<User> auditors;//审核者
+    private List<File> supportFiles;//任务所需材料
+    private List<File> resultFiles;//
 
     public Task() {
         super();

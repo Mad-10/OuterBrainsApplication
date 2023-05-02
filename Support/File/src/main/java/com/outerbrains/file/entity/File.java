@@ -16,11 +16,4 @@ public class File extends OuterBrainsObject {
         super();
     }
 
-    public File(String fileName, String fileType, Long fileSize, String description) {
-        super(fileName, description);
-        this.fileName = fileName;
-        this.fileType = fileType;
-        this.fileSize = fileSize;
-        this.description = description;
-    }
 }
