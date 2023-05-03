@@ -1,10 +1,11 @@
 package com.outerbrains.base.exception;
 
 public class OuterBrainsException extends Exception{
-    OuterBrainsException() {
+    public OuterBrainsException() {
+        super("OuterBrains 默认异常。");
     }
-
-    OuterBrainsException(String message) {
+    public OuterBrainsException(String message) {
         super(message);
     }
+
 }
