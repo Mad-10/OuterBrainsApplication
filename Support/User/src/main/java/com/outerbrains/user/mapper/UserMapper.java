@@ -12,7 +12,7 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
 
-    @Insert("INSERT INTO user(id, name, description, password) VALUES(#{id}, #{name}, #{description}, #{password})")
+    @Insert("INSERT INTO user(id, name, description, createTime, updateTime, password) VALUES(#{id}, #{name}, #{description}, #{createTime}, #{updateTime}, #{password})")
     int insert(User user);
 
     @Select("SELECT * FROM user WHERE id = #{id}")

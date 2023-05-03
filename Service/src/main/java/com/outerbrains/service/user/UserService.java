@@ -1,20 +1,19 @@
 package com.outerbrains.service.user;
 
-import com.outerbrains.base.exception.OuterBrainsException;
-import com.outerbrains.service.exception.user.UserHasBeenRegisteredException;
-import com.outerbrains.service.exception.user.UserHaveNotBeenRegisiterException;
-import com.outerbrains.service.exception.user.UserIncorrectPasswordException;
-import com.outerbrains.user.dto.UserLoginResult;
-import com.outerbrains.user.entity.User;
-import com.outerbrains.user.mapper.UserMapper;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
+import com.outerbrains.service.exception.user.UserHasBeenRegisteredException;
+import com.outerbrains.service.exception.user.UserHaveNotBeenRegisiterException;
+import com.outerbrains.service.exception.user.UserIncorrectPasswordException;
+import com.outerbrains.user.dto.UserResult;
+import com.outerbrains.user.entity.User;
+import com.outerbrains.user.mapper.UserMapper;
 
 @Service
 public class UserService {
-
 
     private final UserMapper userMapper;
 
@@ -23,36 +22,46 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public UserLoginResult login(User user) throws UserHaveNotBeenRegisiterException, UserIncorrectPasswordException {
-        //先判断用户是否注册过，如果还没有注册，抛出异常
-        User result = userMapper.findByName(user.getName());
-        if (result == null) {
-            throw new UserHaveNotBeenRegisiterException("用户" + user.getName() + "尚未注册！");
-        } else {//如果已经注册了，继续登录
-            if (user.getPassword().equals(result.getPassword())) {
-                return new UserLoginResult(result);
-            } else {
-                throw new UserIncorrectPasswordException();
-            }
-        }
-    }
+    /**
+     * 用户登录
+     *
+     * @param user 登录用户的信息
+     * @return 返回用户信息
+     * @throws UserHaveNotBeenRegisiterException 当用户尚未注册时，抛出此异常
+     * @throws UserIncorrectPasswordException    当用户输入的密码不正确时，抛出此异常
+     */
+    public UserResult login(User user) throws UserHaveNotBeenRegisiterException, UserIncorrectPasswordException {
+        Optional<User> optional = Optional.ofNullable(userMapper.findByName(user.getName()));
+        User result = optional.orElseThrow(() -> new UserHaveNotBeenRegisiterException("用户" + user.getName() + "尚未注册！"));
 
-    public void register(User user) throws OuterBrainsException {
-        //先根据用户名判断用户是否存在，存在则抛出异常
-        User result = userMapper.findByName(user.getName());
-        if (result != null) {
-            throw new UserHasBeenRegisteredException();
-        } else {
-            //如果不存在，就将用户信息添加到数据库
-            result = user;
-            user = new User();
-            user.setName(result.getName());
-            user.setPassword(result.getPassword());
-            int affectedRow = userMapper.insert(user);
-            if (affectedRow <= 0) {
-                throw new OuterBrainsException("由于未知原因，在向数据库新增记录时失败！注册信息：" + user);
-            }
+        if (!user.getPassword().equals(result.getPassword())) {
+            throw new UserIncorrectPasswordException();
         }
+
+        return new UserResult(result);
+    }
+    /**
+     * 用户注册
+     *
+     * @param user 要注册的用户信息
+     * @return 注册成功返回 1，失败返回 0
+     * @throws UserHasBeenRegisteredException 当用户已经注册过时，抛出此异常
+     */
+    public int register(User user) throws UserHasBeenRegisteredException {
+        User existingUser = userMapper.findByName(user.getName());
+        if (existingUser != null) {
+            throw new UserHasBeenRegisteredException("用户" + user.getName() + "已经注册过。");
+        } else {
+            System.out.println(user);
+            User newUser = new User(user.getName(), user.getPassword());
+            return userMapper.insert(newUser);
+        }
+//        Optional<User> optional = Optional.ofNullable(userMapper.findByName(user.getName()));
+//        User existingUser = optional.orElseGet(() -> {
+//            userMapper.insert(user);
+//            return user;
+//        });
+//        throw new UserHasBeenRegisteredException("用户" + user.getName() + "已经注册过。");
     }
 
 }

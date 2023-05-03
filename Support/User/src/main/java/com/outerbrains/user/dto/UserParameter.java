@@ -7,6 +7,11 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class UserLoginParameter extends OuterBrainsParameter<User> {
+public class UserParameter extends OuterBrainsParameter<User> {
+    public UserParameter() {
+    }
 
+    public UserParameter(User data) {
+        super(data);
+    }
 }

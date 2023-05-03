@@ -3,7 +3,7 @@ package com.outerbrains.service.user;
 import com.outerbrains.base.exception.OuterBrainsException;
 import com.outerbrains.service.exception.user.UserHaveNotBeenRegisiterException;
 import com.outerbrains.service.exception.user.UserIncorrectPasswordException;
-import com.outerbrains.user.dto.UserLoginResult;
+import com.outerbrains.user.dto.UserResult;
 import com.outerbrains.user.entity.User;
 import com.outerbrains.user.mapper.UserMapper;
 import com.outerbrains.service.exception.user.UserHasBeenRegisteredException;
@@ -41,7 +41,7 @@ public class UserServiceTest {
         Mockito.when(userMapper.findByName(user.getName())).thenReturn(dbUser);
 
         // 调用UserService的login方法
-        UserLoginResult result = userService.login(user);
+        UserResult result = userService.login(user);
 
         // 验证是否成功登录
         Assertions.assertNotNull(result);
@@ -79,6 +79,18 @@ public class UserServiceTest {
 
         //验证是否成功插入新用户记录
         Mockito.verify(userMapper).insert(Mockito.any(User.class));
+    }
+
+    @Test
+    public void register() {
+        //创建要测试的UserService对象
+        UserService userService = new UserService(userMapper);
+        try {
+            userService.register(new User("alanivan", "alanivan"));
+        } catch (UserHasBeenRegisteredException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Test

@@ -20,7 +20,12 @@ public class OuterBrainsResult<T extends OuterBrainsObject> {
         this.data = data;
     }
 
-    public OuterBrainsResult(OuterBrainsResultEnum result, T data) {//自定义操作结果
+    public OuterBrainsResult(String errorMessage) {
+        this.result = OuterBrainsResultEnum.FAILURE;
+        this.errorMessage = errorMessage;
+    }
+
+    public OuterBrainsResult(OuterBrainsResultEnum result, String errorMessage, T data) {//自定义操作结果
         this.result = result;
         this.data = data;
     }

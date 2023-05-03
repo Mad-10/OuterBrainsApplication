@@ -12,13 +12,19 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class User extends OuterBrainsObject {
-    @JsonIgnore
+//    @JsonIgnore
     private String password;
     private List<Contact> contacts;
     private File avatar;//用户头像
-    @JsonProperty("password")
-    public String getPasswordForSerialization() {
-        return password;
+//    @JsonProperty("password")
+//    public String getPasswordForSerialization() {
+//        return password;
+//    }
+    public User() {
     }
 
+    public User(String name, String password) {
+        super(name);
+        this.password = password;
+    }
 }
