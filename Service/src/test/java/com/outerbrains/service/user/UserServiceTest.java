@@ -1,6 +1,9 @@
 package com.outerbrains.service.user;
 
 import com.outerbrains.base.exception.OuterBrainsException;
+import com.outerbrains.service.exception.user.UserHaveNotBeenRegisiterException;
+import com.outerbrains.service.exception.user.UserIncorrectPasswordException;
+import com.outerbrains.user.dto.UserLoginResult;
 import com.outerbrains.user.entity.User;
 import com.outerbrains.user.mapper.UserMapper;
 import com.outerbrains.service.exception.user.UserHasBeenRegisteredException;
@@ -17,6 +20,43 @@ public class UserServiceTest {
 
     @Mock
     private UserMapper userMapper;
+
+
+    @Test
+    void testLogin() throws OuterBrainsException {
+        //创建要测试的UserService对象
+        UserService userService = new UserService(userMapper);
+
+        // 模拟用户对象
+        User user = new User();
+        user.setName("testUser");
+        user.setPassword("testPassword");
+
+        // 模拟从数据库中查询到的用户对象
+        User dbUser = new User();
+        dbUser.setName("testUser");
+        dbUser.setPassword("testPassword");
+
+        // 设置模拟行为
+        Mockito.when(userMapper.findByName(user.getName())).thenReturn(dbUser);
+
+        // 调用UserService的login方法
+        UserLoginResult result = userService.login(user);
+
+        // 验证是否成功登录
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(result.getData().getName(), dbUser.getName());
+        Assertions.assertEquals(result.getData().getPassword(), dbUser.getPassword());
+
+        // 测试输入密码错误的情况
+        user.setPassword("wrongPassword");
+        Assertions.assertThrows(UserIncorrectPasswordException.class, () -> userService.login(user));
+
+        // 测试用户未注册的情况
+        Mockito.when(userMapper.findByName(user.getName())).thenReturn(null);
+        Assertions.assertThrows(UserHaveNotBeenRegisiterException.class, () -> userService.login(user));
+    }
+
 
     @Test
     void testRegister() throws OuterBrainsException {

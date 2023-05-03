@@ -2,6 +2,9 @@ package com.outerbrains.service.user;
 
 import com.outerbrains.base.exception.OuterBrainsException;
 import com.outerbrains.service.exception.user.UserHasBeenRegisteredException;
+import com.outerbrains.service.exception.user.UserHaveNotBeenRegisiterException;
+import com.outerbrains.service.exception.user.UserIncorrectPasswordException;
+import com.outerbrains.user.dto.UserLoginResult;
 import com.outerbrains.user.entity.User;
 import com.outerbrains.user.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +23,18 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public void login(User user) {
-
+    public UserLoginResult login(User user) throws UserHaveNotBeenRegisiterException, UserIncorrectPasswordException {
+        //先判断用户是否注册过，如果还没有注册，抛出异常
+        User result = userMapper.findByName(user.getName());
+        if (result == null) {
+            throw new UserHaveNotBeenRegisiterException("用户" + user.getName() + "尚未注册！");
+        } else {//如果已经注册了，继续登录
+            if (user.getPassword().equals(result.getPassword())) {
+                return new UserLoginResult(result);
+            } else {
+                throw new UserIncorrectPasswordException();
+            }
+        }
     }
 
     public void register(User user) throws OuterBrainsException {
@@ -37,7 +50,7 @@ public class UserService {
             user.setPassword(result.getPassword());
             int affectedRow = userMapper.insert(user);
             if (affectedRow <= 0) {
-                throw new OuterBrainsException("由于未知原因，注册失败！注册信息：" + user);
+                throw new OuterBrainsException("由于未知原因，在向数据库新增记录时失败！注册信息：" + user);
             }
         }
     }

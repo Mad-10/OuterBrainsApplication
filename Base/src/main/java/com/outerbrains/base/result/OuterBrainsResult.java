@@ -2,7 +2,9 @@ package com.outerbrains.base.result;
 
 import com.outerbrains.base.entity.OuterBrainsObject;
 import com.outerbrains.base.result.OuterBrainsResultEnum;
+import lombok.Data;
 
+@Data
 public class OuterBrainsResult<T extends OuterBrainsObject> {
     OuterBrainsResultEnum result;
     String errorMessage;
