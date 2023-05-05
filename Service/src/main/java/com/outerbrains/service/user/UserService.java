@@ -37,7 +37,7 @@ public class UserService {
         if (!user.getPassword().equals(result.getPassword())) {
             throw new UserIncorrectPasswordException();
         }
-
+        result.setPassword("********");
         return new UserResult(result);
     }
     /**

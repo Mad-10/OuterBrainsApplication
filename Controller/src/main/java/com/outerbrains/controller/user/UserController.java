@@ -1,6 +1,7 @@
 package com.outerbrains.controller.user;
 
 import com.outerbrains.base.result.OuterBrainsResultEnum;
+import com.outerbrains.controller.exception.NotFoundUserInfoException;
 import com.outerbrains.service.exception.user.UserHasBeenRegisteredException;
 import com.outerbrains.service.exception.user.UserHaveNotBeenRegisiterException;
 import com.outerbrains.service.exception.user.UserIncorrectPasswordException;
@@ -10,10 +11,7 @@ import com.outerbrains.user.dto.UserResult;
 import com.outerbrains.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
@@ -30,9 +28,12 @@ public class UserController {
     public ResponseEntity<UserResult> login(@RequestBody UserParameter userParameter) {
         UserResult result;
         try {
-             result = userService.login(userParameter.getData());
-             return ResponseEntity.ok(result);
-        } catch (UserHaveNotBeenRegisiterException | UserIncorrectPasswordException e) {
+            if (userParameter.getData() == null) {
+                throw new NotFoundUserInfoException();
+            }
+            result = userService.login(userParameter.getData());
+            return ResponseEntity.ok(result);
+        } catch (UserHaveNotBeenRegisiterException | UserIncorrectPasswordException | NotFoundUserInfoException e) {
             result = new UserResult(e.getMessage());
             return ResponseEntity.badRequest().body(result);
         }
